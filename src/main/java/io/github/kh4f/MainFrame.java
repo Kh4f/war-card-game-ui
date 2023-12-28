@@ -66,8 +66,6 @@ public class MainFrame extends JFrame {
             SwingUtils.showErrorMessageBox(e);
         }
 
-
-
         writeStringCardsArrToJTable(deck1Table, game.getDeck1().toStringArray());
         writeStringCardsArrToJTable(deck2Table, game.getDeck2().toStringArray());
         writeStringCardsArrToJTable(shownCards1Table, game.getShownCards1().toStringArray());
