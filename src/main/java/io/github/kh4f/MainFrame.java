@@ -33,7 +33,11 @@ public class MainFrame extends JFrame {
         this.pack();
         this.setLocation((screenSize.width - mainPanel.getWidth()) / 2, (screenSize.height - mainPanel.getHeight()) / 2);
 
-        game = new Game();
+        try {
+            game = new Game();
+        } catch (Deck.DeckException e) {
+            SwingUtils.showErrorMessageBox(e);
+        }
         endGameDialog = new EndGameDialog(this::newGame, this);
 
         JTableUtils.initJTableForArray(deck1Table, 60, false, false, false, false);
@@ -57,12 +61,12 @@ public class MainFrame extends JFrame {
         moveCounterLabel.setText("Move: " + game.getCurrentMove());
 
         try {
-            String img1Path = game.getShownCards1().isEmpty() ? "/cards/card-frame-1.png" : "/cards/"+ game.getShownCards1().getFirst().toString() + ".png";
+            String img1Path = game.getShownCards1().isEmpty() ? "/cards/card-frame-1.png" : "/cards/"+ game.getShownCards1().checkTopCard().toString() + ".png";
             currCardImg1.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(img1Path))));
 
-            String img2Path = game.getShownCards2().isEmpty() ? "/cards/card-frame-2.png" : "/cards/"+ game.getShownCards2().getFirst().toString() + ".png";
+            String img2Path = game.getShownCards2().isEmpty() ? "/cards/card-frame-2.png" : "/cards/"+ game.getShownCards2().checkTopCard().toString() + ".png";
             currCardImg2.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(img2Path))));
-        } catch (Exception e) {
+        } catch (Deck.DeckException e) {
             SwingUtils.showErrorMessageBox(e);
         }
 
@@ -127,7 +131,8 @@ public class MainFrame extends JFrame {
 
                 Если у двух и более игроков окажутся одинаковые карты, то каждый из этих игроков
                 кладет сверху ещё по одной карте, и тот, чья карта оказалась старше всех остальных,
-                снимает карты.""", "Rules", JOptionPane.QUESTION_MESSAGE)));
+                снимает карты.
+                Дополнительное правило: шестёрка бьёт туза.""", "Rules", JOptionPane.QUESTION_MESSAGE)));
         menuHelp.add(createMenuItem("About program", "ctrl+A", e -> JOptionPane.showMessageDialog(this, """
                 Название игры: Пьяница (War)
                 Описание: карточная игра на Java Swing
@@ -139,7 +144,11 @@ public class MainFrame extends JFrame {
     }
 
     private void newGame() {
-        game = new Game();
+        try {
+            game = new Game();
+        } catch (Deck.DeckException e) {
+            SwingUtils.showErrorMessageBox(e);
+        }
         updateView();
     }
 
